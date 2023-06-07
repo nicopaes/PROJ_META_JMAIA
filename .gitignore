@@ -1,6 +1,6 @@
 # This .gitignore file should be placed at the root of your Unity project directory
 #
-# Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
+# Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
 /[Ll]ibrary/
 /[Tt]emp/
@@ -8,14 +8,13 @@
 /[Bb]uild/
 /[Bb]uilds/
 /[Ll]ogs/
-/[Uu]ser[Ss]ettings/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/
 
-# Recordings can get excessive in size
-/[Rr]ecordings/
+# Asset meta data should only be ignored when the corresponding asset is also ignored
+!/[Aa]ssets/**/*.meta
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
@@ -57,16 +56,66 @@ sysinfo.txt
 
 # Builds
 *.apk
-*.aab
 *.unitypackage
-*.app
+
+# Unitypackage meta
+*.unitypackage.meta
 
 # Crashlytics generated file
 crashlytics-build.properties
 
-# Packed Addressables
-/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+# Ignore all unpacked demos.
+/Assets/Plugins/Sirenix/Demos/*
 
-# Temporary auto-generated Android Assets
-/[Aa]ssets/[Ss]treamingAssets/aa.meta
-/[Aa]ssets/[Ss]treamingAssets/aa/*
+# But keep the demo packages themselves.
+!/Assets/Plugins/Sirenix/Demos/*.unitypackage 
+
+Assets/PlayMaker/Editor/Install/LegacyGUI.unitypackage.meta
+
+Assets/PlayMaker/Editor/Install/LegacyITween.unitypackage.meta
+
+Assets/PlayMaker/Editor/Install/LegacyNetworking.unitypackage.meta
+
+Assets/PlayMaker/Editor/Install/Playmaker.1.9.0.unitypackage.meta
+
+Assets/PlayMaker/Editor/Install/ProfilerActions.unitypackage.meta
+
+Assets/PlayMaker/Versions/PlaymakerDefault.unitypackage.meta
+
+Assets/PlayMaker/Versions/PlaymakerPreview.unitypackage.meta
+
+Assets/Scripts/Debug/InputRecorderData/
+
+
+UserSettings/
+
+.vscode/
+
+Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset
+
+Assets/PlayMaker/Editor/Resources/EditorStartupPrefs.asset
+
+Assets/Dialogues/Master.json
+
+Assets/Story/Master.json
+
+/**/bin/
+/**/obj/
+
+# Never ignore DLLs in the FMOD subfolder.
+!/[Aa]ssets/Plugins/FMOD//lib/*
+
+# Don't ignore images and gizmos used by FMOD in the Unity Editor.
+!/[Aa]ssets/Gizmos/FMOD/*
+!/[Aa]ssets/Editor Default Resources/FMOD/*
+
+# Ignore the Cache folder since it is updated locally.
+/[Aa]ssets/Plugins/FMOD/Cache/*
+
+# Ignore bank files in the StreamingAssets folder.
+/[Aa]ssets/StreamingAssets//.bank
+/[Aa]ssets/StreamingAssets/**/.bank.meta
+
+# If the source bank files are kept outside of the StreamingAssets folder then these can be ignored.
+# Log files can be ignored.
+fmod_editor.log
