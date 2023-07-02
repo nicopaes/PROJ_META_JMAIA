@@ -6,7 +6,9 @@ public class collisionTest : MonoBehaviour
 {   
     private void OnTriggerEnter(Collider other) 
     {
-        Debug.Log($"tag: {other.tag}");
-        Debug.Log($"name: {other.transform.name}");
+        if(other.tag == "Player")
+        {
+            Debug.Log($"name: {other.transform.name}");
+        }        
     }
 }
