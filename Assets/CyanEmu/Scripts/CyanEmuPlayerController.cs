@@ -6,11 +6,12 @@ using System.Reflection;
 
 // Noodle bowl defines its own button class, which would break CyanEmu.
 // Ensuring button is properly defined with this using statement.
-using UIButton = UnityEngine.UI.Button; 
+using UIButton = UnityEngine.UI.Button;
 
 #if UDON
 using VRC.Udon;
 using VRC.Udon.Common;
+using VRC.SDK3.ClientSim;
 #endif
 
 #if UNITY_POST_PROCESSING_STACK_V2
@@ -24,7 +25,8 @@ namespace VRCPrefabs.CyanEmu
     {
         public static CyanEmuPlayerController instance;
 
-        private enum Stance {
+        private enum Stance
+        {
             STANDING,
             CROUCHING,
             PRONE,
@@ -50,7 +52,7 @@ namespace VRCPrefabs.CyanEmu
 
         private readonly KeyCode MenuKey = KeyCode.Escape;
 
-        
+
         private GameObject playspace_;
         private GameObject playerCamera_;
         private GameObject rightArmPosition_;
@@ -83,7 +85,7 @@ namespace VRCPrefabs.CyanEmu
         private float gravityStrength_ = 1f;
 
         //Only used to prevent sliding without changing the input manager.
-        private Vector2 prevInput_; 
+        private Vector2 prevInput_;
         private Vector2 prevInputResult_;
 
         private bool velSet;
@@ -108,7 +110,7 @@ namespace VRCPrefabs.CyanEmu
             }
             return Camera.main;
         }
-        
+
         private void Awake()
         {
             if (instance != null)
@@ -174,14 +176,14 @@ namespace VRCPrefabs.CyanEmu
             rightArmPosition_.transform.localRotation = Quaternion.Euler(-45, 0, -90);
             rightArmRigidbody_ = rightArmPosition_.AddComponent<Rigidbody>();
             rightArmRigidbody_.isKinematic = true;
-            
+
             leftArmPosition_ = new GameObject("Left Arm Position");
             leftArmPosition_.transform.SetParent(playerCamera_.transform, false);
             leftArmPosition_.transform.localPosition = new Vector3(-0.2f, -0.2f, 0.75f);
             leftArmPosition_.transform.localRotation = Quaternion.Euler(-45, 0, -90);
             leftArmRigidbody_ = leftArmPosition_.AddComponent<Rigidbody>();
             leftArmRigidbody_.isKinematic = true;
-            
+
             mouseLook_ = new MouseLook();
             mouseLook_.Init(transform, playerCamera_.transform);
 
@@ -197,7 +199,7 @@ namespace VRCPrefabs.CyanEmu
             interactHelper_.Initialize(playerCamera_.transform, playerCamera_.transform, shouldCheckForInteracts);
 
             reticleTexture_ = Resources.Load<Texture2D>("Images/Reticle");
-            
+
             cameraProxyObject_ = new GameObject("CameraDamageProxy").transform;
             cameraProxyObject_.SetParent(CyanEmuMain.GetProxyObjectTransform(), false);
             UpdateCameraProxyPosition();
@@ -227,7 +229,7 @@ namespace VRCPrefabs.CyanEmu
             }
 
             CopyCameraValues(refCamera, camera_);
-            
+
             if (CyanEmuCombatSystemHelper.instance != null)
             {
                 CyanEmuCombatSystemHelper.instance.CreateVisualDamage();
@@ -269,7 +271,7 @@ namespace VRCPrefabs.CyanEmu
                     postProcessLayer.volumeTrigger = refPostProcessLayer.volumeTrigger != refPostProcessLayer.transform
                         ? refPostProcessLayer.volumeTrigger
                         : postProcessLayer.volumeTrigger = camera.transform;
-                    
+
                     // post processing should always be enabled.
                     // postProcessLayer.enabled = refPostProcessLayer.enabled;
 
@@ -342,19 +344,19 @@ namespace VRCPrefabs.CyanEmu
             text.rectTransform.anchorMin = Vector2.zero;
             text.rectTransform.anchorMax = Vector2.one;
             text.font = font;
-            
-#if UNITY_EDITOR           
+
+#if UNITY_EDITOR
             GameObject settingsButton = new GameObject("SettingsButton");
             settingsButton.layer = menuLayer;
             settingsButton.transform.SetParent(menu_.transform, false);
             settingsButton.transform.localPosition = new Vector3(-60, -100, 0);
             settingsButton.AddComponent<Image>();
             button = settingsButton.AddComponent<UIButton>();
-            
+
             // TODO handle this better
             Type settingsWindow = Type.GetType("VRCPrefabs.CyanEmu.CyanEmuSettingsWindow, Assembly-CSharp-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
             button.onClick.AddListener(() => UnityEditor.EditorWindow.GetWindow(settingsWindow, false, "CyanEmu Settings"));
-            
+
             RectTransform rect = settingsButton.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(100, 50);
 
@@ -371,7 +373,7 @@ namespace VRCPrefabs.CyanEmu
             text.rectTransform.anchorMax = Vector2.one;
             text.font = font;
 #endif
-            
+
 
             ToggleMenu(true);
         }
@@ -416,7 +418,7 @@ namespace VRCPrefabs.CyanEmu
         {
             strafeSpeed_ = strafeSpeed;
         }
-        
+
         public float GetGravityStrength()
         {
             return gravityStrength_;
@@ -442,7 +444,7 @@ namespace VRCPrefabs.CyanEmu
             // TODO fix value
             return characterController_.velocity;
         }
-        
+
         public void SetVelocity(Vector3 velocity)
         {
             playerRetainedVelocity_ = velocity;
@@ -494,7 +496,7 @@ namespace VRCPrefabs.CyanEmu
             {
                 currentStation_.ExitStation();
             }
-            
+
             CloseMenu();
             Teleport(CyanEmuMain.GetNextSpawnPoint(), false);
             CyanEmuMain.PlayerRespawned(player_.player);
@@ -514,7 +516,7 @@ namespace VRCPrefabs.CyanEmu
                 currentStation_.ExitStation();
             }
 #endif
-            
+
             floorRotation = Quaternion.Euler(0, floorRotation.eulerAngles.y, 0);
             if (fromPlaySpace)
             {
@@ -573,7 +575,7 @@ namespace VRCPrefabs.CyanEmu
                 currentPickup_.Drop();
             }
             currentPickup_ = pickup;
-            
+
             pickup.UpdatePosition(rightArmPosition_.transform, true);
             FixedJoint fixedJoint = rightArmPosition_.AddComponent<FixedJoint>();
             fixedJoint.connectedBody = pickup.GetRigidbody();
@@ -667,15 +669,15 @@ namespace VRCPrefabs.CyanEmu
                 currentPickup_.UpdatePosition(rightArmPosition_.transform);
                 currentPickup_.UpdateUse();
             }
-            
+
             UpdateStance();
             UpdateMenu();
             UpdateCameraProxyPosition();
-            
+
             prevousHandPosition_ = rightArmPosition_.transform.position;
             prevousHandRotation_ = rightArmPosition_.transform.rotation.eulerAngles;
         }
-   
+
         private void FixedUpdate()
         {
             Physics.SyncTransforms();
@@ -776,7 +778,7 @@ namespace VRCPrefabs.CyanEmu
 
             UpdateCameraProxyPosition();
         }
-     
+
         // TODO do this better...
         // Refactor all input out of the player controller and simply have it listen to these events
 #if UDON
@@ -796,7 +798,7 @@ namespace VRCPrefabs.CyanEmu
             {
                 return;
             }
-            
+
             foreach (var (keyCode, eventName, handType) in keyToEvent_)
             {
                 HandleInputForKey(keyCode, eventName, handType);
@@ -822,7 +824,7 @@ namespace VRCPrefabs.CyanEmu
                 UdonManager.Instance.RunInputAction(UdonManager.UDON_LOOK_VERTICAL, args);
             }
             prevMouseInput_ = mouseInput;
-            
+
             // TODO refactor all this out into its own input manager that the player controller listens to.
             // Handle sending movement input to Udon.
             if (Mathf.Abs(prevMoveInput_.x - prevInputResult_.x) > 1e-3)
@@ -838,7 +840,7 @@ namespace VRCPrefabs.CyanEmu
 
             prevMoveInput_ = prevInputResult_;
         }
-        
+
         private void HandleInputForKey(KeyCode key, string eventName, HandType handType)
         {
             if (Input.GetKeyDown(key))
@@ -912,7 +914,7 @@ namespace VRCPrefabs.CyanEmu
                     stance_ = Stance.PRONE;
                 }
             }
-            
+
 
             if (updateStancePosition_)
             {
@@ -936,8 +938,8 @@ namespace VRCPrefabs.CyanEmu
             vertical = GetExpectedMovement(vertical, prevInput_.y, prevInputResult_.y);
 
             isWalking_ = !Input.GetKey(CyanEmuSettings.Instance.runKey);
-            
-            speed = new Vector2(isWalking_? walkSpeed_ : runSpeed_, strafeSpeed_);
+
+            speed = new Vector2(isWalking_ ? walkSpeed_ : runSpeed_, strafeSpeed_);
             input = new Vector2(horizontal, vertical);
             prevInput_ = curInput;
             prevInputResult_ = input;
@@ -950,7 +952,7 @@ namespace VRCPrefabs.CyanEmu
             {
                 speed *= PRONE_SPEED_MULTIPLYER_;
             }
-            
+
             if (input.sqrMagnitude > 1)
             {
                 input.Normalize();
@@ -964,7 +966,7 @@ namespace VRCPrefabs.CyanEmu
             {
                 return previousDecision;
             }
-            
+
             if (input < 0 && input < previous)
             {
                 return -1;
@@ -1022,9 +1024,9 @@ namespace VRCPrefabs.CyanEmu
                 return;
             }
             Vector2 center = CyanEmuBaseInput.GetScreenCenter();
-            
-            if(reticleTexture_ == null) return;
-            if(center == null) return;
+
+            if (reticleTexture_ == null) return;
+            if (center == null) return;
 
             Vector2 size = new Vector2(reticleTexture_.width, reticleTexture_.height);
             Rect position = new Rect(center - size * 0.5f, size);
@@ -1073,10 +1075,10 @@ namespace VRCPrefabs.CyanEmu
                 yRot = 0;
                 xRot = 0;
             }
-            
+
             m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
             m_CameraTargetRot *= Quaternion.Euler(-xRot, 0f, 0f);
-            
+
             m_CameraTargetRot = ClampRotationAroundAxis(m_CameraTargetRot, 0);
 
             if (inStation)
@@ -1088,7 +1090,7 @@ namespace VRCPrefabs.CyanEmu
             {
                 character.localRotation = m_CharacterTargetRot;
             }
-            
+
             camera.localRotation = m_CameraTargetRot;
         }
 
