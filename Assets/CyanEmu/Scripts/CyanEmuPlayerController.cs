@@ -1022,6 +1022,10 @@ namespace VRCPrefabs.CyanEmu
                 return;
             }
             Vector2 center = CyanEmuBaseInput.GetScreenCenter();
+            
+            if(reticleTexture_ == null) return;
+            if(center == null) return;
+
             Vector2 size = new Vector2(reticleTexture_.width, reticleTexture_.height);
             Rect position = new Rect(center - size * 0.5f, size);
             GUI.DrawTexture(position, reticleTexture_);
