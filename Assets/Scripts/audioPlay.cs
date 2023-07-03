@@ -11,6 +11,7 @@ public class audioPlay : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.GetComponent<ClientSimBehaviour>() != null)
         {
+            Debug.Log("This collision is happening");
             audioSource.Play();
         }
     }

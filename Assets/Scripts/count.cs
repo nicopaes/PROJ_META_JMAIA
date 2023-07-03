@@ -10,8 +10,13 @@ public class count : MonoBehaviour
     public AudioSource tie;
     public AudioSource finalMsg;
 
-    public eggCollision egg;
-    public ChickenCollision chicken;
+    public collisionEgg egg;
+    public collisionChicken chicken;
+
+    private void Start() 
+    {
+        Camera.main.gameObject.AddComponent<AudioListener>();
+    }
 
     void Update()
     {
