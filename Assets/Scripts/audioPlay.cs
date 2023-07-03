@@ -7,7 +7,7 @@ public class audioPlay : MonoBehaviour
 {
     public AudioSource audioSource;
 
-    public void OnCollisionEnter(Collision other)
+    public void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.GetComponent<ClientSimBehaviour>() != null)
         {
