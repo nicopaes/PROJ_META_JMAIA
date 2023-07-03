@@ -16,4 +16,14 @@ public class audioPlay : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other) 
+    {
+        Debug.Log("Board Collision");
+        if (other.gameObject.CompareTag("Player") || other.gameObject.GetComponent<ClientSimBehaviour>() != null)
+        {
+            Debug.Log("Board Collision WITH PLAYER");
+            audioSource.Play();
+        }
+    }
+
 }
