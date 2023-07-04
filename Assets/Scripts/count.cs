@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
+using System.Threading.Tasks;
 
 public class count : MonoBehaviour
 {
@@ -20,6 +22,7 @@ public class count : MonoBehaviour
 
     void Update()
     {
+        Task.Delay(120000);
         if (egg.eggCount > chicken.chickenCount)
         {
             Debug.Log("The Egg is the winner!");
@@ -34,6 +37,8 @@ public class count : MonoBehaviour
             Debug.Log("It's a tie!");
             tie.Play();
         }
+        Task.Delay(10000);
+        finalMsg.Play();
     }	
 
 }
